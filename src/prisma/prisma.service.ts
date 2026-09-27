@@ -15,13 +15,15 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor() {
-    console.log("DATABASE_HOST:", process.env.DATABASE_HOST);
-    console.log("DATABASE_USER:", process.env.DATABASE_USER);
-    console.log("DATABASE_NAME:", process.env.DATABASE_NAME);
-    console.log("DATABASE_PORT:", process.env.DATABASE_PORT);
+    console.log('=== PRISMA CONSTRUCTOR ===');
+
+    console.log('DATABASE_HOST:', process.env.DATABASE_HOST);
+    console.log('DATABASE_USER:', process.env.DATABASE_USER);
+    console.log('DATABASE_NAME:', process.env.DATABASE_NAME);
+    console.log('DATABASE_PORT:', process.env.DATABASE_PORT);
     console.log(
-      "DATABASE_PASSWORD exists:",
-      !!process.env.DATABASE_PASSWORD
+      'DATABASE_PASSWORD exists:',
+      !!process.env.DATABASE_PASSWORD,
     );
 
     const adapter = new PrismaMariaDb({
@@ -35,11 +37,17 @@ export class PrismaService
     });
 
     super({ adapter });
+
+    console.log('=== PRISMA CLIENT CREATED ===');
   }
 
   async onModuleInit() {
-  console.log("Prisma module initialized");
-}
+    console.log('=== CONNECTING TO DATABASE ===');
+
+    await this.$connect();
+
+    console.log('=== DATABASE CONNECTED ===');
+  }
 
   async onModuleDestroy() {
     await this.$disconnect();
