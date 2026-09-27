@@ -1,13 +1,25 @@
-import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 
+let app: any;
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  if (!app) {
+    const nestApp = await NestFactory.create(AppModule);
 
-  app.enableCors();
+    await nestApp.init();
 
-  await app.listen(process.env.PORT ?? 3000);
+    app = nestApp.getHttpAdapter().getInstance();
+  }
+
+  return app;
 }
 
-bootstrap();
+export default async function handler(
+  req: any,
+  res: any,
+) {
+  const server = await bootstrap();
+
+  return server(req, res);
+}
