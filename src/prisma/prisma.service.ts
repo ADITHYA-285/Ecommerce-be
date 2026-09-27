@@ -12,8 +12,7 @@ import { PrismaClient } from '../generated/prisma/client.js';
 @Injectable()
 export class PrismaService
   extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy
-{
+  implements OnModuleInit, OnModuleDestroy {
   constructor() {
     console.log('=== PRISMA CONSTRUCTOR ===');
 
@@ -38,6 +37,9 @@ export class PrismaService
       },
 
       connectionLimit: 5,
+      connectTimeout: 10000,
+      acquireTimeout: 20000,
+      idleTimeout: 300,
     });
 
     super({ adapter });
