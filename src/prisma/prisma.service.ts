@@ -17,26 +17,28 @@ export class PrismaService
   constructor() {
     console.log('=== PRISMA CONSTRUCTOR ===');
 
-    console.log('DATABASE_HOST:', process.env.DATABASE_HOST);
-    console.log('DATABASE_USER:', process.env.DATABASE_USER);
-    console.log('DATABASE_NAME:', process.env.DATABASE_NAME);
-    console.log('DATABASE_PORT:', process.env.DATABASE_PORT);
+    console.log('HOST:', process.env.DATABASE_HOST);
+    console.log('USER:', process.env.DATABASE_USER);
+    console.log('DATABASE:', process.env.DATABASE_NAME);
+    console.log('PORT:', process.env.DATABASE_PORT);
     console.log(
-      'DATABASE_PASSWORD exists:',
+      'PASSWORD EXISTS:',
       !!process.env.DATABASE_PASSWORD,
     );
 
     const adapter = new PrismaMariaDb({
-  host: process.env.DATABASE_HOST,
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
-  port: Number(process.env.DATABASE_PORT),
+      host: process.env.DATABASE_HOST,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+      port: Number(process.env.DATABASE_PORT),
 
-  ssl: true,
+      ssl: {
+        minVersion: 'TLSv1.2',
+      },
 
-  connectionLimit: 5,
-});
+      connectionLimit: 5,
+    });
 
     super({ adapter });
 
@@ -46,9 +48,15 @@ export class PrismaService
   async onModuleInit() {
     console.log('=== CONNECTING TO DATABASE ===');
 
-    await this.$connect();
+    try {
+      await this.$connect();
 
-    console.log('=== DATABASE CONNECTED ===');
+      console.log('=== DATABASE CONNECTED ===');
+    } catch (error) {
+      console.error('=== DATABASE CONNECTION FAILED ===');
+      console.error(error);
+      throw error;
+    }
   }
 
   async onModuleDestroy() {

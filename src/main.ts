@@ -1,25 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 
-let app: any;
-
 async function bootstrap() {
-  if (!app) {
-    const nestApp = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
-    await nestApp.init();
+  const port = Number(process.env.PORT) || 3000;
 
-    app = nestApp.getHttpAdapter().getInstance();
-  }
+  await app.listen(port);
 
-  return app;
+  console.log(`NestJS server running on port ${port}`);
 }
 
-export default async function handler(
-  req: any,
-  res: any,
-) {
-  const server = await bootstrap();
-
-  return server(req, res);
-}
+bootstrap();
