@@ -11,9 +11,16 @@ import { AuthModule } from './auth/auth.module.js';
 
 
 @Module({
-  imports: [PrismaModule, ProductsModule, CategoriesModule, UsersModule, CartModule, OrdersModule, AuthModule],
+  imports: [
+    // PrismaModule,
+    ProductsModule,
+    CategoriesModule,
+    UsersModule,
+    CartModule,
+    OrdersModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
-  
 })
 export class AppModule {}
