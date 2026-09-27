@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 
 import { OrdersController } from './orders.controller.js';
 import { OrdersService } from './orders.service.js';
-import { PrismaService } from '../prisma/prisma.service.js';
 
+import { PrismaModule } from '../prisma/prisma.module.js';
 import { AuthModule } from '../auth/auth.module.js';
 
 @Module({
   imports: [
+    PrismaModule,
     AuthModule,
   ],
 
@@ -17,7 +18,6 @@ import { AuthModule } from '../auth/auth.module.js';
 
   providers: [
     OrdersService,
-    PrismaService,
   ],
 })
 export class OrdersModule {}
