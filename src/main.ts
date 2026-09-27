@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 
@@ -7,8 +8,6 @@ async function bootstrap() {
   app.enableCors();
 
   await app.listen(process.env.PORT ?? 3000);
-
-  console.log('=== NEST SERVER STARTED ===');
 }
 
-await bootstrap();
+bootstrap();
