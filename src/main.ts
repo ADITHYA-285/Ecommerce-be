@@ -9,10 +9,7 @@ async function createApp() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: [
-      'http://localhost:5173',
-      'https://YOUR-FRONTEND-VERCEL-URL.vercel.app',
-    ],
+    origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
