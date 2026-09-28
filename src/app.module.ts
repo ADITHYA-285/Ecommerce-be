@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module.js';
 import { ProductsModule } from './products/products.module.js';
 import { CategoriesModule } from './categories/categories.module.js';
 import { UsersModule } from './users/users.module.js';
+import { CartModule } from './cart/cart.module.js';
+import { OrdersModule } from './orders/orders.module.js';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { UsersModule } from './users/users.module.js';
     ProductsModule,
     CategoriesModule,
     UsersModule,
+    CartModule,
+    OrdersModule,
   ],
 
   controllers: [
