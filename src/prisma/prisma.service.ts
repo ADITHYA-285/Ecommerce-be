@@ -6,40 +6,24 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PrismaTiDBCloud } from '@tidbcloud/prisma-adapter';
 import { PrismaClient } from '../generated/prisma/client.js';
 
 @Injectable()
 export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy {
+
   constructor() {
     console.log('=== PRISMA CONSTRUCTOR ===');
 
-    console.log('HOST:', process.env.DATABASE_HOST);
-    console.log('USER:', process.env.DATABASE_USER);
-    console.log('DATABASE:', process.env.DATABASE_NAME);
-    console.log('PORT:', process.env.DATABASE_PORT);
     console.log(
-      'PASSWORD EXISTS:',
-      !!process.env.DATABASE_PASSWORD,
+      'DATABASE_URL EXISTS:',
+      !!process.env.DATABASE_URL,
     );
 
-    const adapter = new PrismaMariaDb({
-      host: process.env.DATABASE_HOST,
-      user: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      port: Number(process.env.DATABASE_PORT),
-
-      ssl: {
-        minVersion: 'TLSv1.2',
-      },
-
-      connectionLimit: 5,
-      connectTimeout: 10000,
-      acquireTimeout: 20000,
-      idleTimeout: 300,
+    const adapter = new PrismaTiDBCloud({
+      url: process.env.DATABASE_URL!,
     });
 
     super({ adapter });
