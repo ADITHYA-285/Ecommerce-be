@@ -28,14 +28,14 @@ export class PrismaService
       'DATABASE_URL HOST:',
       process.env.DATABASE_URL
         ? new URL(process.env.DATABASE_URL).hostname
-        : 'NO URL',
+        : 'NOT FOUND',
     );
+
+    console.log('=== USING TIDB ADAPTER ===');
 
     const adapter = new PrismaTiDBCloud({
       url: process.env.DATABASE_URL!,
     });
-
-    console.log('=== USING TIDB ADAPTER ===');
 
     super({ adapter });
 
@@ -49,23 +49,14 @@ export class PrismaService
       await this.$connect();
 
       console.log('=== DATABASE CONNECTED ===');
-
-      // IMPORTANT: actually test a query
-      await this.$queryRaw`SELECT 1`;
-
-      console.log('=== DATABASE QUERY SUCCESS ===');
-
     } catch (error) {
-      console.error('=== DATABASE CONNECTION/QUERY FAILED ===');
+      console.error('=== DATABASE CONNECTION FAILED ===');
       console.error(error);
-
       throw error;
     }
   }
 
   async onModuleDestroy() {
-    console.log('=== DISCONNECTING DATABASE ===');
-
     await this.$disconnect();
   }
 }
