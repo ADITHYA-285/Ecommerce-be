@@ -5,47 +5,32 @@ import { AppModule } from './app.module.js';
 
 let cachedHandler: any;
 
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://ecommerce-fe-mu-sage.vercel.app',
-];
-
 async function createApp() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      // Allow requests without an Origin header
-      // such as curl/server-to-server requests.
-      if (!origin) {
-        callback(null, true);
-        return;
-      }
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      const allowedOrigins = [
+        'https://ecommerce-fe-mu-sage.vercel.app',
+        'https://ecommerce-bvwi15pei-adithyas-projects-e20db2dd.vercel.app',
+      ];
 
-      if (allowedOrigins.includes(origin)) {
+      // Allow requests without Origin, such as curl/server-to-server
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
-        return;
+      } else {
+        callback(new Error('Not allowed by CORS'));
       }
-
-      callback(new Error('Not allowed by CORS'));
     },
 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+
+    allowedHeaders: ['Content-Type', 'Authorization'],
+
     credentials: true,
-
-    methods: [
-      'GET',
-      'HEAD',
-      'PUT',
-      'PATCH',
-      'POST',
-      'DELETE',
-      'OPTIONS',
-    ],
-
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-    ],
   });
 
   return app;
@@ -53,28 +38,6 @@ async function createApp() {
 
 // Vercel serverless handler
 export default async function handler(req: any, res: any) {
-
-  // Explicitly handle browser preflight requests
-  if (req.method === 'OPTIONS') {
-    const origin = req.headers.origin;
-
-    if (origin && allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
-      res.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      );
-      res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Content-Type, Authorization',
-      );
-      res.setHeader('Vary', 'Origin');
-    }
-
-    return res.status(204).end();
-  }
-
   if (!cachedHandler) {
     console.log('=== STARTING NESTJS APPLICATION ===');
 
